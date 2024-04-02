@@ -123,7 +123,7 @@ ipv6 unicast-routing
 ```
 interface vlan 1
 ipv6 address 2001:db8:acad:1::b/64
-ipv6 address fe80::1 link-local
+ipv6 address fe80::2 link-local
 no shutdown
 ```
 
