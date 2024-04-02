@@ -87,7 +87,7 @@ ipv6 address fe80::1 link-local
 no shutdown
 ```
 
-Вывод команды ```show ipv6 interface brief```
+Вывод команды ```show ipv6 interface brief```   
 ![Alt text](./ipv6-int-br.png)   
 
 Адреса из задания присвоены нужным интерфейсам
