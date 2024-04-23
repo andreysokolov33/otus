@@ -258,7 +258,7 @@ ip address 192.168.30.1 255.255.255.0
 description Operations
 
 int g0/0/1.1000
-encapsulation dot1Q 1000
+encapsulation dot1Q 1000 native
 description Native
 ```
 Вывод команды ```show ip int br``` и кусок файла конфигурации, где видно описание интерфейсов
