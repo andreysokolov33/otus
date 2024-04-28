@@ -10,7 +10,7 @@
 
 ## 2. Топология сети
 
-![Alt text](./topology..png)           
+![Alt text](./topology.png)           
 Рисунок 1. Топология сети
 
 
