@@ -259,7 +259,8 @@ switchport mode access
 switchport access vlan 100
 ```
 
-Распределение портов по VLAN на S1 следующее:    
+Распределение портов по VLAN на S1 следующее:  
+
 ![Alt text](./s1_vlan_table.png)
 
 **Вопрос**. Почему интерфейс F0/5 указан в VLAN 1?     
@@ -330,6 +331,7 @@ wr
 ![Alt text](./r1-show-ip-dhcp-pool.png)
 
 Таблица выданных адресов пока что пуста:
+
 ![Alt text](./r1-show-ip-dhcp-binding.png)
 
 
@@ -340,6 +342,7 @@ wr
 ![Alt text](./pca-ipconfig-1.png)
 
 Теперь вывод команды show `ip dhcp binbing` следующий:
+
 ![Alt text](./r1-show-ip-dhcp-binding-2.png)
 
 ### Часть 3.	Настройка и проверка DHCP-ретрансляции на R2
