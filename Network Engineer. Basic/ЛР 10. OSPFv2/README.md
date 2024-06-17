@@ -193,21 +193,48 @@ network 192.168.1.0 0.0.0.255 area 0
 
 ### Часть 3. Оптимизация и проверка конфигурации OSPFv2 для одной области
 
+
+#### Шаг 1. Реализация различных оптимизаций на каждом маршрутизаторе
 Настрйока R1:
 
 ```
 int gi0/0/1
 ip ospf priority 50
 ip ospf hello-interval 30
+ip ospf dead-interval 120
 
 ip route 0.0.0.0 0.0.0.0 loopback 1
 
 route ospf 56
-network 172.16.1.0 0.0.0.255 area 0
+default-information originate
+auto-cost reference-bandwidth 10000
+
+clear ip ospf proc
 ```
 
-#### Шаг 1. Реализация различных оптимизаций на каждом маршрутизаторе
+Настройки R2:
 
+```
+int gi0/0/1
+ip ospf hello-interval 30
+ip ospf dead-interval 120
+
+route ospf 56
+passive-interface lo1
+auto-cost reference-bandwidth 10000
+
+clear ip ospf proc
+```
 
 
 #### Шаг 2. Убедитесь, что оптимизация OSPFv2 реализовалась
+
+Результат команды `show ip ospf interface gi0/0/1` на R1:
+
+![Alt text](./r1-show-ip-ospf-int.png)
+
+Приоритет равен 50, таймеры 30/120
+
+Так как в `show ip route ospf` маршрут до Loopback R2 был без маски указан, приложен скриншот команды `show ip route`, где видно, что сеть Loopback интерфейса с маской 24 представлена.
+
+![Alt text](./r1-show-ip-route-ospf-2.png)
