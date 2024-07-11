@@ -9,7 +9,7 @@
 
 ## 2. Топология сети
 
-![Alt text](./topology.png)
+![Alt text](./topology-2.png)
 
 Рисунок 1. Топология сети
 
@@ -17,7 +17,8 @@
 
 | Устройство | Интерфейс | IP адрес | Маска подсети | Шлюз по умолчанию |
 | :--------: | :-------- | :------: | :-----------: | :---------------: |
-| R1 | G0/0/1 | - | -  | - |
+| R1 | G0/0/0 | 10.50.0.1 | 255.255.255.0 | - |
+| R1 | G0/0/1 | - | - | - |
 | R1 | G0/0/1.20 | 10.20.0.1 | 255.255.255.0 | - |
 | R1 | G0/0/1.30 | 10.30.0.1 | 255.255.255.0 | - |
 | R1 | G0/0/1.40 | 10.40.0.1 | 255.255.255.0 | - |
@@ -28,6 +29,7 @@
 | S2 | VLAN 20 | 10.20.0.3 | 255.255.255.0 | 10.20.0.1 |
 | PC-A | NIC | 10.30.0.10 | 255.255.255.0 | 10.30.0.1 |
 | PC-B | NIC | 10.40.0.10 | 255.255.255.0 | 10.40.0.1 |
+| WEB | NIC | 10.50.0.2 | 255.255.255.0 | 10.50.0.1 |
 
 
 ## 3. Таблица VLAN
@@ -46,7 +48,7 @@
 
 #### Шаг 1. Создайте сеть согласно топологии
 
-
+Собранная схема представлена на рисунке 1.
 
 #### Шаг 2. Произведите базовую настройку маршрутизаторов
 
@@ -193,7 +195,7 @@ name Native
 int vlan 20
 
 interface vlan 20
-ip address 10.20.0.2 255.255.255.0
+ip address 10.20.0.3 255.255.255.0
 
 ip default-gateway 10.20.0.1
 
@@ -220,7 +222,7 @@ switchport access vlan 30
 
 ```
 int fa0/5
-switchport mode access 
+switchport mode access
 switchport access vlan 20
 
 int fa0/18
@@ -232,7 +234,7 @@ switchport access vlan 40
 
 ![Alt text](./s1-do-show-vlan-br.png)
 
-Результат команды `do show vlan brief на S1`:
+Результат команды `do show vlan brief на S2`:
 
 ![Alt text](./s2-do-show-vlan-br.png)
 
@@ -329,7 +331,7 @@ login local
 
 #### Шаг 2. Включите защищенные веб-службы с проверкой подлинности на R1
 
-В Packet Tracer не удалось найти такие команды
+В Packet Tracer не удалось найти такие команды. Вместо этого в схему установлен WEB сервер, который подлючается к R1 gi0/0/0 и имеет адрес 10.50.0.2/24.
 
 ### Часть 6. Проверка подключения
 
@@ -371,9 +373,98 @@ SSH с PC-B адреса 172.16.1.1
 
 #### Шаг 1. Проанализируйте требования к сети и политике безопасности для планирования реализации ACL
 
+Правила касаются сетей SALES и OPERATIONS, поэтому будет 2 отдельных списка, которые будут применены к нужным подинтерфейсам на R1. Списки должны быть расширенные, так как необходима тонкая фильтрация трафика. Политика будет IN, чтобы маршрутизатор не тратил время на поиск по таблице маршрутизации адреса назначения, а сразу отрезал трафик.
 
 #### Шаг 2. Разработка и применение расширенных списков доступа, которые будут соответствовать требованиям политики безопасности
 
+Список для SALES сети:
+
+```
+ip access-list extended SALES-RULES
+
+remark Block access for SALES to MANAGEMENT via SSH
+deny tcp 10.40.0.0 0.0.0.255 10.20.0.0 0.0.0.255 eq 22
+
+remark Block access for SALES to MANAGEMENT and WEB SERVER via HTTP/HTTPS
+deny tcp 10.40.0.0 0.0.0.255 10.20.0.0 0.0.0.255 eq www
+deny tcp 10.40.0.0 0.0.0.255 10.20.0.0 0.0.0.255 eq 443
+deny tcp 10.40.0.0 0.0.0.255 10.50.0.0 0.0.0.255 eq www
+deny tcp 10.40.0.0 0.0.0.255 10.50.0.0 0.0.0.255 eq 443
+
+remark Block access for SALES to HTTP/HTTPS R1
+deny tcp 10.40.0.0 0.0.0.255 host 10.30.0.1 eq www
+deny tcp 10.40.0.0 0.0.0.255 host 10.30.0.1 eq 443
+deny tcp 10.40.0.0 0.0.0.255 host 10.40.0.1 eq www
+deny tcp 10.40.0.0 0.0.0.255 host 10.40.0.1 eq 443
+
+remark Block ICMP traffic from SALES to OPERATIONS or to MANAGEMENT
+deny icmp 10.40.0.0 0.0.0.255 10.20.0.0 0.0.0.255
+deny icmp 10.40.0.0 0.0.0.255 10.30.0.0 0.0.0.255
+
+permit ip any any
+```
+
+Список для сети OPERATIONS:
+
+```
+ip access-list extended OPERATIONS-RULES
+
+remark Block ICMP from OPERATIONS to SALES
+deny icmp 10.30.0.0 0.0.0.255 10.40.0.0 0.0.0.255
+
+permit ip any any
+```
+
+Применение правил
+
+```
+int gi0/0/1.30
+ip access-group OPERATIONS-RULES in
+
+int gi0/0/1.40
+ip access-group SALES-RULES in
+```
 
 
 #### Шаг 3. Убедитесь, что политики безопасности применяются развернутыми списками доступа
+
+Пинг с PC-A на адрес 10.40.0.10 - **СБОЙ**
+
+![Alt text](./tests-ping-from-pca-to-10-40-0-10.png)
+
+Пинг с PC-A на адрес 10.20.0.1 - **УСПЕХ**
+
+![Alt text](./tests-ping-from-pca-to-10-20-0-1.png)
+
+Пинг с PC-В на адрес 10.30.0.10 - **СБОЙ**
+
+![Alt text](./tests-ping-from-pcb-to-10-30-0-10.png)
+
+Пинг с PC-В на адрес 10.20.0.1 - **СБОЙ**
+
+![Alt text](./tests-ping-from-pcb-to-10-20-0-1.png)
+
+Пинг с PC-В на адрес 172.16.1.1 - **УСПЕХ**
+
+![Alt text](./tests-ping-from-pcb-to-172-16-1-1.png)
+
+Доступ через браузер на WEB сервер (10.50.0.2) с PC-B - **СБОЙ**
+
+![Alt text](./tests-web-from-pcb-to-webserver.png)
+
+Так как на самом R1 нет WEB севера, следующим шагом сделана не проверка доступа с PC-B на 172.16.1.1, а доступ на WEB сервер с PC-A
+Доступ через браузер на WEB сервер с PC-A - **УСПЕХ**
+
+![Alt text](./tests-web-from-pca-to-webserver.png)
+
+Доступ через SSH с PC-B на 10.20.0.4 - **СБОЙ**
+
+![Alt text](./test-ssh-from-pcb-to-10-20-0-4_1.png)
+
+![Alt text](./test-ssh-from-pcb-to-10-20-0-4_2.png)
+
+Доступ через SSH с PC-B на 172.16.1.1 - **УСПЕХ**
+
+![Alt text](./test-ssh-from-pcb-to-172-16-0-1_1.png)
+
+![Alt text](./test-ssh-from-pcb-to-172-16-0-1_2.png)
