@@ -13,10 +13,10 @@
 
 ## Задание
 
-1. [Описать полную схему сети компании](./docs/full_schema)
-2. [Описать имитацию Интернета](./docs/internet_descroption)
-3. [Распределить адресное пространство](./docs/addressing)
-4. [Настройка головного офиса](./docs/main_office) 
-5. [Настройка магазина](./docs/shop_settings)
-6. [Тестирование сети](./docs/testings)
+1. [Описать полную схему сети компании](./docs/full_schema.md)
+2. [Описать имитацию Интернета](./docs/internet_descroption.md)
+3. [Распределить адресное пространство](./docs/addressing.md)
+4. [Настройка головного офиса](./docs/main_office.md) 
+5. [Настройка магазина](./docs/shop_settings.md)
+6. [Тестирование сети](./docs/testings.md)
 
