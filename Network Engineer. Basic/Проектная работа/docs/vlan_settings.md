@@ -2,7 +2,7 @@
 
 1. Создание VLAN на коммутаторах
 
-Настройка корневых L3 коммутаторов (CORE-1SW и CORE-2SW)
+Настройка корневых L3 коммутаторов (**CORE-1SW** и **CORE-2SW**)
 
 ```
 vlan 55 
@@ -262,15 +262,115 @@ name Native
 Настройка CORE-1SW:
 
 ```
+interface Vlan55
+ip address 10.10.1.2 255.255.255.224
 
+interface Vlan56
+ip address 10.10.2.2 255.255.255.0
+
+interface Vlan57
+ip address 10.10.1.130 255.255.255.128
+
+interface Vlan60
+ip address 10.10.1.66 255.255.255.192
+
+interface Vlan77
+ip address 10.10.12.2 255.255.254.0
+
+interface Vlan80
+ip address 10.10.10.2 255.255.255.224
+
+interface Vlan88
+ip address 10.10.14.2 255.255.255.0
+
+interface Vlan89
+ip address 10.10.15.2 255.255.255.0
+
+interface Vlan90
+ip address 10.10.3.2 255.255.255.192
+
+interface Vlan91
+ip address 10.10.3.66 255.255.255.192
+
+interface Vlan92
+ip address 10.10.3.130 255.255.255.192
+
+interface Vlan93
+ip address 10.10.3.194 255.255.255.192
+
+interface Vlan100
+ip address 10.10.1.34 255.255.255.224
+
+interface Vlan111
+ip address 10.10.4.2 255.255.252.0
+
+interface Vlan125
+ip address 10.10.10.34 255.255.255.224
+
+interface Vlan130
+ip address 10.10.8.2 255.255.254.0
+
+interface Vlan200
+ip address 10.10.10.130 255.255.255.128
 ```
 
 Настройка CORE-2SW:
 
 ```
+interface Vlan55
+ip address 10.10.1.3 255.255.255.224
 
+interface Vlan56
+ip address 10.10.2.3 255.255.255.0
+
+interface Vlan57
+ip address 10.10.1.131 255.255.255.128
+
+interface Vlan60
+ip address 10.10.1.67 255.255.255.192
+
+interface Vlan77
+ip address 10.10.12.3 255.255.254.0
+
+interface Vlan80
+ip address 10.10.10.3 255.255.255.224
+
+interface Vlan88
+ip address 10.10.14.3 255.255.255.0
+
+interface Vlan89
+ip address 10.10.15.3 255.255.255.0
+
+interface Vlan90
+ip address 10.10.3.3 255.255.255.192
+
+interface Vlan91
+ip address 10.10.3.67 255.255.255.192
+
+interface Vlan92
+ip address 10.10.3.131 255.255.255.192
+
+interface Vlan93
+ip address 10.10.3.195 255.255.255.192
+
+interface Vlan100
+ip address 10.10.1.35 255.255.255.224
+
+interface Vlan111
+ip address 10.10.4.3 255.255.252.0
+
+interface Vlan125
+ip address 10.10.10.35 255.255.255.224
+
+interface Vlan130
+ip address 10.10.8.3 255.255.254.0
+
+interface Vlan200
+ip address 10.10.10.131 255.255.255.128
 ```
 
+В разделе настройки DHCP сервера для тех VLAN, где он предусмотрен, одним из параметров будет маршрут по умолчанию. В качестве такого маршрута будет указан адрес виртуального маршрутизатора для каждого VLAN, которые реализуются через протокол HSRP. После HSRP можно будет считать настройку ROAS законченной.
 
+Далее: [Настройка HSRP](./hsrp_settings.md)
 
 Назад: [Настройка головного офиса](./main_office.md)

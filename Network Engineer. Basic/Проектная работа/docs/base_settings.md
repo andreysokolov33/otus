@@ -44,4 +44,6 @@ login
 service password-encryption 
 ```
 
+Далее: [Настройка PaGP](./pagp_settings.md)
+
 Назад: [Настройка головного офиса](./main_office.md)
