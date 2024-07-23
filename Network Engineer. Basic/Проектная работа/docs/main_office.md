@@ -8,7 +8,8 @@
 8. [Настройка политик ACL](./acl_settings.md)
 9. [Настройка NAT](./nat_settings.md)
 10. [Настройка маршрутизации](./routing_settings.md)
-11. [Настройка WiFi](./wifi_settings.md)
-12. [Настройка прочих сервисов](./other_settings.md)
+11. [Настройка туннелей](./tunnel_settings.md)
+12. [Настройка WiFi](./wifi_settings.md)
+13. [Настройка прочих сервисов](./other_settings.md)
 
 

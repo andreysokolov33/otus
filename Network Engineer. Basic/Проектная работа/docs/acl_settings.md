@@ -4,31 +4,29 @@
 
 В какие сети какой VLAN имеет доступ, а также может ли устройство в данном VLAN выходить в Интернет
 
-| VLAN | Название | В сеть какого VLAN | В Интернет |
+| VLAN | Название | Из какого VLAN ессть доступ | В Интернет |
 | --- | --- | --- | --- |
-| 55 | СКУД | - | Нет |
-| 56 | IP камеры | - | Нет |
-| 57 | Пост охраны | 60, 80, 90, 91, 92, 93 | Да |
-| 60 | Ресепшн | 57, 80, 90, 91, 92, 93, 111, 130 | Да |
-| 77 | IT отдел | Все VLAN | Да |
-| 80 | Серверная | Все VLAN | Да |
-| 88 | Ремонтный  | Все VLAN | Да |
-| 89 | Тестировщики | Все VLAN | Да |
-| 90 | HR | 57, 60, 80, 91, 92, 93, 111, 130 | Да |
-| 91 | Юристы | 57, 60, 80, 90, 92, 93, 111, 130 | Да |
-| 92 | Бухгалтерия | 57, 60, 80, 90, 91, 93, 111, 130 | Да |
-| 93 | Администрация | 57, 60, 80, 90, 91, 92, 111, 130 | Да |
-| 100 | DMZ | 57, 77, 80, 88, 89 | Да |
-| 111 | WiFi Emploees | 57, 60, 80, 88, 89, 90, 91, 92, 93, 100 | Да |
-| 125 | Датчики дыма | - | Нет |
-| 130 | WiFi Guest | 60, 80, 90, 91, 92, 93 | Да |
-| 200 | Management | -  | Нет |
+| 55 | СКУД | 77, 80, 88, 89, 200 | Нет |
+| 56 | IP камеры | 77, 80, 88, 89, 200 | Нет |
+| 57 | Пост охраны | 77, 80, 88, 89, 100, 200 | Да |
+| 60 | Ресепшн | 77, 80, 88, 89, 93, 100, 200 | Да |
+| 77 | IT отдел | 77, 80, 88, 89, 100, 200 | Да |
+| 80 | Серверная | <div>Полный доступа: 77, 88, 89</div> <div>Для всех порты: 67, 68, 53, 21</div> | Да |
+| 88 | Ремонтный  | 77, 80, 88, 89, 100, 200 | Да |
+| 89 | Тестировщики | 77, 80, 88, 89, 100, 200 | Да |
+| 90 | HR | 77, 80, 88, 89, 93, 100, 200 | Да |
+| 91 | Юристы | 77, 80, 88, 89, 93, 100, 200 | Да |
+| 92 | Бухгалтерия | 77, 80, 88, 89, 93, 100, 200 | Да |
+| 93 | Администрация | 77, 80, 88, 89, 100, 200 | Да |
+| 100 | DMZ | <div>Полный доступа: 77, 80, 88, 89</div> <div>Для всех порты: 21, 80, 443, SMTP, POP3, ICMP</div> | Да |
+| 111 | WiFi Emploees | 77, 80, 88, 89, 100, 200 | Да |
+| 125 | Датчики дыма | 77, 80, 88, 89, 200 | Нет |
+| 130 | WiFi Guest | 77, 80, 88, 89, 100, 200 | Да |
+| 200 | Management | 77, 80, 88, 89, 200 | Да |
 
 Для запрета доступа одной подсети в другую будут использоваться стандартные ACL, которые работают по SRC IP. Списки будут назначаться на нужный VLAN на L3 коммутаторах в направлении OUT, так как это самая близкая к источнику назначения точка в топологии. Также не всем подсетям дается полный доступ в подсеть серверной и DMZ, для них открыты лишь определенный порты, например, порты DHCP сервера, FTP, WEB и тд - это уже расширенные списки.
 
 Списки правил одинаковые для CORE1-SW и CORE2-SW.
-
-Политика правил будет - **запрещено все, что не разрешено**.
 
 [Адреса подсетей](./addressing.md#vlans)
 
@@ -49,21 +47,28 @@ permit 10.10.10.128 0.0.0.127
 remark DMZ VLAN
 permit 10.10.1.32 0.0.0.31
 
+remark Deny Others VLANs
+deny 10.10.0.0 0.0.15.255 
+
+remark Permit Internet Resourses
+permit any 
+
+
 
 interface vlan 57
-ip acces PERMIT-TECH-AND-DMZ out
+ip access-group PERMIT-TECH-AND-DMZ out
 interface vlan 77
-ip acces PERMIT-TECH-AND-DMZ out
+ip access-group PERMIT-TECH-AND-DMZ out
 interface vlan 88
-ip acces PERMIT-TECH-AND-DMZ out
+ip access-group PERMIT-TECH-AND-DMZ out
 interface vlan 89
-ip acces PERMIT-TECH-AND-DMZ out
+ip access-group PERMIT-TECH-AND-DMZ out
 interface vlan 93
-ip acces PERMIT-TECH-AND-DMZ out
+ip access-group PERMIT-TECH-AND-DMZ out
 interface vlan 111
-ip acces PERMIT-TECH-AND-DMZ out
+ip access-group PERMIT-TECH-AND-DMZ out
 interface vlan 130
-ip acces PERMIT-TECH-AND-DMZ out
+ip access-group PERMIT-TECH-AND-DMZ out
 ```
 
 Список, который разрешает доступ IT специалистов (IT отдел, ремонтный отдел и тестировщики), сети управления (Management), Серверной, а также устройствам в сети администрации доступ в данную сеть. Предназначен для VLAN 60, 90, 91, 92.
@@ -86,16 +91,23 @@ permit 10.10.3.192 0.0.0.63
 remark DMZ VLAN
 permit 10.10.1.32 0.0.0.31
 
+remark Deny Others VLANs
+deny 10.10.0.0 0.0.15.255 
+
+remark Permit Internet Resourses
+permit any 
+
+
 
 
 interface vlan 60
-ip acces PERMIT-TECH-DMZ-AND-ADMIN out
+ip access-group PERMIT-TECH-DMZ-AND-ADMIN out
 interface vlan 90
-ip acces PERMIT-TECH-DMZ-AND-ADMIN out
+ip access-group PERMIT-TECH-DMZ-AND-ADMIN out
 interface vlan 91
-ip acces PERMIT-TECH-DMZ-AND-ADMIN out
+ip access-group PERMIT-TECH-DMZ-AND-ADMIN out
 interface vlan 92
-ip acces PERMIT-TECH-DMZ-AND-ADMIN out
+ip access-group PERMIT-TECH-DMZ-AND-ADMIN out
 ```
 
 Список, который разрешает доступ IT специалистов (IT отдел, ремонтный отдел и тестировщики), сети управления (Management) и Серверной. Предназначен для VLAN 55, 56, 125, 200.
@@ -115,17 +127,17 @@ permit 10.10.10.128 0.0.0.127
 
 
 interface vlan 55
-ip acces PERMIT-ONLY-TECH out
+ip access-group PERMIT-ONLY-TECH out
 interface vlan 56
-ip acces PERMIT-ONLY-TECH out
+ip access-group PERMIT-ONLY-TECH out
 interface vlan 125
-ip acces PERMIT-ONLY-TECH out
+ip access-group PERMIT-ONLY-TECH out
 interface vlan 200
-ip acces PERMIT-ONLY-TECH out
+ip access-group PERMIT-ONLY-TECH out
 ```
 
 
-Список, который разрешает полный доступ из сети IT специалистов (IT отдел, ремонтный отдел и тестировщики), сети управления, Серверной. Также для всех открыты порты 67-68 (DHCP), 53 (DNS), 21 (FTP), ICMP трафик. Предназначен для VLAN 80.
+Список, который разрешает полный доступ из сети IT специалистов (IT отдел, ремонтный отдел и тестировщики), сети управления, Серверной. Также для всех открыты порты 67-68 (DHCP), 53 (DNS), 21 (FTP). Предназначен для VLAN 80. Последним правилом идет доступ разрешающее для всех не из офисной сети. Нужно для ICMP трафика во внешнюю сеть, для прочих запросов.
 
 ```
 ip access-list extended PERMIT-SERVER
@@ -148,13 +160,16 @@ permit udp any host 10.10.10.10 eq 53
 remark Open FTP Server for all
 permit udp any host 10.10.10.30 eq 21
 
-remark Permit ICMP
-permit icmp any 10.10.1.32 0.0.0.31
+remark Deny Others VLANs
+deny ip 10.10.0.0 0.0.15.255 10.10.10.0 0.0.0.31
+
+remark Permit Internet Resourses
+permit ip any 10.10.10.0 0.0.0.31
 
 
 
 interface vlan 80
-ip acces PERMIT-SERVER out
+ip access-group PERMIT-SERVER out
 ```
 
 Список, который разрешает полный доступ из сети IT специалистов (IT отдел, ремонтный отдел и тестировщики), сети управления, Серверной. Также для всех открыты порты 80 и 443 (HTTp, HTTPS), 21 (FTP), SMTP и POP3, ICMP. Предназначен для VLAN 100.
@@ -192,7 +207,26 @@ permit icmp any 10.10.1.32 0.0.0.31
 
 
 interface vlan 100
-ip acces PERMIT-DMZ out
+ip access-group PERMIT-DMZ out
+```
+
+ACL для внешних интерфейсов L3 комутаторов, чтобы контролировать доступ сетям в Интернет. Это стандартный ACL, который назначается на физические порты CORE1-SW и CORE2-SW Gi1/0/4-5. Чтобы лист был проще и быстрее обрабатывался, в Интернет могут выходить все сети, кроме тех, что запрещены:
+
+```
+ip access-list standard PERMIT-INTERNET
+remark Deny SCUD
+deny 10.10.1.0 0.0.0.31
+remark Deny IP Cameras
+deny 10.10.2.0 0.0.0.255
+remark Deny SmokeRadar
+deny 10.10.10.32 0.0.0.31
+remark Permit Other Traffic
+permit any
+
+
+
+interfacerange Gi1/0/4-5
+ip access-group PERMIT-INTERNET out
 ```
 
 
