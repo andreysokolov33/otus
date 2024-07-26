@@ -2,8 +2,6 @@
 
 Политика ACL для данной компании:
 
-В какие сети какой VLAN имеет доступ, а также может ли устройство в данном VLAN выходить в Интернет
-
 Списками ACL закрыт полный доступ в серверную, в DMZ зону и на камеры, СКУД и датчики дыма. Также запрещается доступ в Интернет тем, кто не должен выходить в сеть
 
 
@@ -73,7 +71,7 @@ permit tcp any host 10.10.1.36 eq 80
 permit tcp any host 10.10.1.36 eq 443
 permit tcp any host 10.10.1.38 eq smtp 
 permit tcp any host 10.10.1.38 eq pop3 
-permit tcp any host 10.10.1.37 eq 21 
+permit tcp any host 10.10.1.37
 
 remark Permit Estableshed Connections
 permit tcp any any established 
