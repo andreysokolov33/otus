@@ -125,13 +125,14 @@
 | Расположение | Устройство | Интерфейс | Адрес |
 | --- | --- | --- | --- |
 | NAT Layer | R1-NAT | Fa0/0 | 109.245.17.10 |
-| NAT Layer | R1-NAT | Fa0/1 | 89.215.20.70 |
+| NAT Layer | R1-NAT | Fa0/1 | 192.168.250.2 |
 | NAT Layer | R1-NAT | Fa1/0 | 172.30.0.1 |
 | NAT Layer | R1-NAT | Fa1/1 | 172.30.0.5 |
-| NAT Layer | R2-NAT | Fa0/0 | 109.245.17.14 |
+| NAT Layer | R2-NAT | Fa0/0 | 192.168.250.1 |
 | NAT Layer | R2-NAT | Fa0/1 | 89.215.20.66 |
 | NAT Layer | R2-NAT | Fa1/0 | 172.30.0.9 |
 | NAT Layer | R2-NAT | Fa1/1 | 172.30.0.13 |
+
 
 #### Корневой уровень
 
