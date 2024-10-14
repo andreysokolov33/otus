@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lab name="STP" version="1" scripttimeout="30000" lock="0">
+  <topology>
+    <nodes>
+      <node id="1" name="S1" type="qemu" template="viosl2" image="viosl2-15.2.4.55e" console="telnet" cpu="1" cpulimit="0" ram="1024" ethernet="8" uuid="780d7108-9c0f-4b4d-a627-3bb3029fa1c4" qemu_options="-machine type=pc,accel=kvm -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc -cpu host" qemu_version="2.4.0" qemu_arch="x86_64" delay="0" icon="Switch-2D-L2-Generic-S.svg" config="0" left="321" top="336">
+        <interface id="0" name="Gi0/0" type="ethernet" network_id="1"/>
+        <interface id="1" name="Gi0/1" type="ethernet" network_id="2"/>
+        <interface id="2" name="Gi0/2" type="ethernet" network_id="3"/>
+        <interface id="3" name="Gi0/3" type="ethernet" network_id="4"/>
+      </node>
+      <node id="2" name="S2" type="qemu" template="viosl2" image="viosl2-15.2.4.55e" console="telnet" cpu="1" cpulimit="0" ram="1024" ethernet="8" uuid="60aedbc6-1581-4cb0-81ab-0da4b80e9e72" qemu_options="-machine type=pc,accel=kvm -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc -cpu host" qemu_version="2.4.0" qemu_arch="x86_64" delay="0" icon="Switch-2D-L2-Generic-S.svg" config="0" left="498" top="450">
+        <interface id="0" name="Gi0/0" type="ethernet" network_id="3"/>
+        <interface id="1" name="Gi0/1" type="ethernet" network_id="4"/>
+        <interface id="2" name="Gi0/2" type="ethernet" network_id="5"/>
+        <interface id="3" name="Gi0/3" type="ethernet" network_id="6"/>
+      </node>
+      <node id="3" name="S3" type="qemu" template="viosl2" image="viosl2-15.2.4.55e" console="telnet" cpu="1" cpulimit="0" ram="1024" ethernet="8" uuid="5ff6bd46-b0d9-46fd-b00e-94d09eed9a98" qemu_options="-machine type=pc,accel=kvm -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc -cpu host" qemu_version="2.4.0" qemu_arch="x86_64" delay="0" icon="Switch-2D-L2-Generic-S.svg" config="0" left="693" top="336">
+        <interface id="0" name="Gi0/0" type="ethernet" network_id="1"/>
+        <interface id="1" name="Gi0/1" type="ethernet" network_id="2"/>
+        <interface id="2" name="Gi0/2" type="ethernet" network_id="5"/>
+        <interface id="3" name="Gi0/3" type="ethernet" network_id="6"/>
+      </node>
+    </nodes>
+    <networks>
+      <network id="1" type="bridge" name="Net-S1iface_0" left="422" top="298" visibility="0" icon="lan.png"/>
+      <network id="2" type="bridge" name="Net-S1iface_1" left="422" top="298" visibility="0" icon="lan.png"/>
+      <network id="3" type="bridge" name="Net-S1iface_2" left="422" top="298" visibility="0" icon="lan.png"/>
+      <network id="4" type="bridge" name="Net-S1iface_3" left="422" top="298" visibility="0" icon="lan.png"/>
+      <network id="5" type="bridge" name="Net-S2iface_2" left="618" top="475" visibility="0" icon="lan.png"/>
+      <network id="6" type="bridge" name="Net-S2iface_3" left="618" top="475" visibility="0" icon="lan.png"/>
+    </networks>
+  </topology>
+  <objects>
+    <textobjects>
+      <textobject id="1" name="txt 1" type="text">
+        <data>PGRpdiBpZD0iY3VzdG9tVGV4dDEiIGNsYXNzPSJjdXN0b21TaGFwZSBjdXN0b21UZXh0IGNvbnRleHQtbWVudSBqdGstZHJhZ2dhYmxlIGRyYWdzdG9wcGVkIiBkYXRhLXBhdGg9IjEiIHN0eWxlPSJkaXNwbGF5OiBpbmxpbmU7IHBvc2l0aW9uOiBhYnNvbHV0ZTsgbGVmdDogMjI4cHg7IHRvcDogMjAxcHg7IGN1cnNvcjogbW92ZTsgei1pbmRleDogMTAwMTsgaGVpZ2h0OiAxMTlweDsgd2lkdGg6IGF1dG87Ij48cCBhbGlnbj0ibGVmdCIgc3R5bGU9InZlcnRpY2FsLWFsaWduOnRvcDtjb2xvcjojMDAwMDAwO2JhY2tncm91bmQtY29sb3I6I2ZmZmZmZjtmb250LXNpemU6MTRweDtmb250LXdlaWdodDogbm9ybWFsOyIgY29udGVudGVkaXRhYmxlPSJmYWxzZSIgY2xhc3M9IiI+UzEgTUFDOiA1MDAwLjAwMDEuMDAwMDxicj5CSUQ6IDMyNzY5OjUwMDAuMDAwMS4wMDAwPGJyPkdpMC8wOiBEZXNnPGJyPkdpMC8xOiBTaHV0ZG93bjxicj5HaTAvMjogRGVzZzxicj5HaTAvMzogU2h1dGRvd24gICAgICAgIDwvcD48L2Rpdj4=</data>
+      </textobject>
+      <textobject id="2" name="txt 2" type="text">
+        <data>PGRpdiBpZD0iY3VzdG9tVGV4dDIiIGNsYXNzPSJjdXN0b21TaGFwZSBjdXN0b21UZXh0IGNvbnRleHQtbWVudSBqdGstZHJhZ2dhYmxlIHVpLXNlbGVjdGVlIHVpLXJlc2l6YWJsZS1hdXRvaGlkZSIgZGF0YS1wYXRoPSIyIiBzdHlsZT0iZGlzcGxheTogaW5saW5lOyBwb3NpdGlvbjogYWJzb2x1dGU7IGxlZnQ6IDY2M3B4OyB0b3A6IDIwMXB4OyBjdXJzb3I6IG1vdmU7IHotaW5kZXg6IDEwMDE7IGhlaWdodDogMTE5cHg7IHdpZHRoOiBhdXRvOyI+PHAgYWxpZ249ImxlZnQiIHN0eWxlPSJ2ZXJ0aWNhbC1hbGlnbjp0b3A7Y29sb3I6IzAwMDAwMDtiYWNrZ3JvdW5kLWNvbG9yOiNmZmZmZmY7Zm9udC1zaXplOjE0cHg7Zm9udC13ZWlnaHQ6IG5vcm1hbDsiIGNvbnRlbnRlZGl0YWJsZT0iZmFsc2UiIGNsYXNzPSIiPlMyIE1BQzogNTAwMC4wMDAyLjAwMDA8YnI+QklEOiAzMjc2OTo1MDAwLjAwMDIuMDAwMDxicj5HaTAvMDogUm9vdDxicj5HaTAvMTogU2h1dGRvd248YnI+R2kwLzI6IEFsdG48YnI+R2kwLzM6IFNodXRkb3duICAgICAgICAgPC9wPjwvZGl2Pg==</data>
+      </textobject>
+      <textobject id="4" name="txt 4" type="text">
+        <data>PGRpdiBpZD0iY3VzdG9tVGV4dDQiIGNsYXNzPSJjdXN0b21TaGFwZSBjdXN0b21UZXh0IGNvbnRleHQtbWVudSBqdGstZHJhZ2dhYmxlIHVpLXNlbGVjdGVlIGRyYWdzdG9wcGVkIHVpLXJlc2l6YWJsZS1hdXRvaGlkZSIgZGF0YS1wYXRoPSI0IiBzdHlsZT0iZGlzcGxheTogaW5saW5lOyBwb3NpdGlvbjogYWJzb2x1dGU7IGxlZnQ6IDYxOHB4OyB0b3A6IDQ1MHB4OyBjdXJzb3I6IG1vdmU7IHotaW5kZXg6IDEwMDE7IGhlaWdodDogMTE5cHg7IHdpZHRoOiBhdXRvOyI+PHAgYWxpZ249ImxlZnQiIHN0eWxlPSJ2ZXJ0aWNhbC1hbGlnbjp0b3A7Y29sb3I6IzAwMDAwMDtiYWNrZ3JvdW5kLWNvbG9yOiNmZmZmZmY7Zm9udC1zaXplOjE0cHg7Zm9udC13ZWlnaHQ6IG5vcm1hbDsiIGNvbnRlbnRlZGl0YWJsZT0iZmFsc2UiIGNsYXNzPSIiPlMzIE1BQzogNTAwMC4wMDAzLjAwMDA8YnI+QklEOiAzMjc2OTo1MDAwLjAwMDMuMDAwMDxicj5HaTAvMDogUm9vdDxicj5HaTAvMTogU2h1dGRvd248YnI+R2kwLzI6IERlc2c8YnI+R2kwLzM6IFNodXRkb3duICAgICAgICA8L3A+PC9kaXY+</data>
+      </textobject>
+    </textobjects>
+  </objects>
+</lab>
