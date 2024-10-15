@@ -1,4 +1,4 @@
-# ЛР 6. Внедрение маршрутизации между виртуальными локальными сетями
+# ЛР 1. Внедрение маршрутизации между виртуальными локальными сетями
 
 ## 1. Цели работы
 
@@ -173,10 +173,10 @@ vlan 8
 name Native
 ```
 
-
 #### Шаг 2. Назначьте сети VLAN соответствующим интерфейсам коммутатора
 
 **Коммутатор S1**
+
 ```
 interface vlan 3
 ip address 192.168.3.11 255.255.255.0
@@ -195,6 +195,7 @@ switchport access vlan 3
 ```
 
 **Коммутатор S2**
+
 ```
 interface vlan 3
 ip address 192.168.3.12 255.255.255.0
@@ -212,7 +213,8 @@ switchport mode access
 switchport access vlan 4
 ```
 
-![Alt text](./s1-show-vlan.png)  
+![Alt text](./s1-show-vlan.png) 
+
 ![Alt text](./s2-show-vlan.png)
 
 ### Часть 3. Конфигурация магистрального канала стандарта 802.1Q между коммутаторами
@@ -247,8 +249,9 @@ switchport trunk allowed vlan 3,4,8
 switchport trunk native vlan 8
 ```
 
-![Alt text](./s1-show-int-trunk.png)    
-![Alt text](./s2-show-int-trunk.png) 
+![Alt text](./s1-show-int-trunk.png)
+
+![Alt text](./s2-show-int-trunk.png)
 
 ### Часть 4. Настройка маршрутизации между сетями VLAN
 
@@ -279,6 +282,7 @@ description Native
 #### Шаг 1. Выполните следующие тесты с PC-A. Все должно быть успешно
 
 Пинг с PC-A до всех устройств успешный:
+
 ![Alt text](./pca-pings.png)
 
 
@@ -286,6 +290,7 @@ description Native
 #### Шаг 2. Пройдите следующий тест с PC-B
 
 Выполнение команды tracert с PC-B до PC-A
+
 ![Alt text](./pcb-trace-pca.png)  
 
 **Вопрос**. Какие промежуточные IP-адреса отображаются в результатах?
