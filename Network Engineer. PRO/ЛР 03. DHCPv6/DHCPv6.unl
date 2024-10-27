@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lab name="DHCPv6" version="1" scripttimeout="30000" lock="0">
+  <topology>
+    <nodes>
+      <node id="4" name="S2" type="qemu" template="viosl2" image="viosl2-15.2.4.55e" console="telnet" cpu="1" cpulimit="0" ram="1024" ethernet="8" uuid="b93c652f-9543-438c-9cad-b81098712f00" qemu_options="-machine type=pc,accel=kvm -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc -cpu host" qemu_version="2.4.0" qemu_arch="x86_64" delay="0" icon="Switch-2D-L2-Generic-S.svg" config="0" left="612" top="177"/>
+      <node id="5" name="R1" type="qemu" template="vios" image="vios-15.5.3M" console="telnet" cpu="1" cpulimit="0" ram="1024" ethernet="4" uuid="47ef2183-9a60-4c3a-a5ab-1b89be6c9c34" qemu_options="-machine type=pc,accel=kvm -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc -cpu host" qemu_version="2.4.0" qemu_arch="x86_64" delay="0" icon="Router-2D-Gen-White-S.svg" config="0" left="459" top="291">
+        <interface id="0" name="Gi0/0" type="ethernet" network_id="1"/>
+        <interface id="1" name="Gi0/1" type="ethernet" network_id="3"/>
+      </node>
+      <node id="6" name="R2" type="qemu" template="vios" image="vios-15.5.3M" console="telnet" cpu="1" cpulimit="0" ram="1024" ethernet="4" uuid="a9be069d-1120-4c85-941a-aea604ef0f0a" qemu_options="-machine type=pc,accel=kvm -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc -cpu host" qemu_version="2.4.0" qemu_arch="x86_64" delay="0" icon="Router-2D-Gen-White-S.svg" config="0" left="603" top="291">
+        <interface id="0" name="Gi0/0" type="ethernet" network_id="2"/>
+        <interface id="1" name="Gi0/1" type="ethernet" network_id="3"/>
+      </node>
+      <node id="1" name="Linux" type="qemu" template="linux" image="linux-ubuntu-22.04-desktop" console="vnc" cpu="4" cpulimit="0" ram="4096" ethernet="1" uuid="d1dd696b-9b7a-4263-bd77-60e58aab2bff" firstmac="00:50:00:00:01:00" qemu_options="-machine type=pc,accel=kvm -vga std -usbdevice tablet -boot order=cd -cpu host" qemu_version="2.4.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" delay="0" icon="Server-2D-Linux-S.svg" config="0" left="300" top="291">
+        <interface id="0" name="e0" type="ethernet" network_id="1"/>
+      </node>
+      <node id="3" name="Switch" type="qemu" template="viosl2" image="viosl2-15.2.4.55e" console="telnet" cpu="1" cpulimit="0" ram="1024" ethernet="8" uuid="6d3a5509-cdb6-41f8-bd1a-e7691dc69c17" qemu_options="-machine type=pc,accel=kvm -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc -cpu host" qemu_version="2.4.0" qemu_arch="x86_64" delay="0" icon="Switch-2D-L2-Generic-S.svg" config="0" left="444" top="174"/>
+      <node id="7" name="Linux" type="qemu" template="linux" image="linux-ubuntu-22.04-desktop" console="vnc" cpu="2" cpulimit="0" ram="4096" ethernet="1" uuid="11438a71-cba8-48ee-a9b7-6bfd1ac29ed1" firstmac="00:50:00:00:07:00" qemu_options="-machine type=pc,accel=kvm -vga std -usbdevice tablet -boot order=cd -cpu host" qemu_version="2.4.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" delay="0" icon="Server-2D-Linux-S.svg" config="0" left="768" top="294">
+        <interface id="0" name="e0" type="ethernet" network_id="2"/>
+      </node>
+    </nodes>
+    <networks>
+      <network id="3" type="bridge" name="Net-vIOS5iface_1" left="540" top="340" visibility="0" icon="lan.png"/>
+      <network id="1" type="bridge" name="Net-Linuxiface_0" left="240" top="331" visibility="0" icon="lan.png"/>
+      <network id="2" type="bridge" name="Net-R2iface_0" left="663" top="331" visibility="0" icon="lan.png"/>
+    </networks>
+  </topology>
+</lab>
