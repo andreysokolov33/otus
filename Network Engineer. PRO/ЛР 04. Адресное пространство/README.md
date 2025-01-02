@@ -114,10 +114,12 @@
 | Москва | R14 | e0/0 | 10.4.0.10 | 30 | - |
 | Москва | R14 | e0/1 | 10.4.0.34 | 30 | - |
 | Москва | R14 | e0/2 | 192.0.2.2 | 30 | - |
+| Москва | R14 | e0/3 | 10.4.0.41 | 30 | - |
 | Москва | R15 | loopback | 10.4.4.4 | 32 | - |
 | Москва | R15 | e0/0 | 10.4.0.30 | 30 | - |
 | Москва | R15 | e0/1 | 10.4.0.14 | 30 | - |
 | Москва | R15 | e0/2 | 198.51.100.2 | 30 | - |
+| Москва | R15 | e0/3 | 10.4.0.42 | 30 | - |
 | Москва | R19 | loopback | 10.4.4.5 | 32 | - |
 | Москва | R19 | e0/0 | 10.4.0.6 | 30 | - |
 | Москва | R19 | e0/1 | 10.4.20.1 | 24 | - |
@@ -791,6 +793,25 @@ switchport mode trunk
 ```shell
 hostname R28
 
+interface Loopback1
+ip address 10.14.2.1 255.255.255.255
+
+interface Ethernet0/0
+ip address 203.0.113.10 255.255.255.252
+
+interface Ethernet0/1
+ip address 203.0.113.14 255.255.255.252
+
+interface Ethernet0/2
+no ip address
+
+interface Ethernet0/2.400
+encapsulation dot1Q 400
+ip address 10.14.16.1 255.255.254.0
+
+interface Ethernet0/2.401
+encapsulation dot1Q 401
+ip address 10.14.18.1 255.255.254.0
 ```
 
 #### SW29
@@ -909,7 +930,7 @@ interface Ethernet0/2
 ip address 172.20.0.13 255.255.255.252
 
 interface Ethernet0/3
-ip address 203.0.113.9 255.255.255.252
+ip address 203.0.113.13 255.255.255.252
 ```
 
 #### R26
