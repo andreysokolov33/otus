@@ -1,11 +1,11 @@
-# ЛР 7. ISIS
+# ЛР 11. Управление анонсами BGP
 
 ## 1. Цели работы
 
-1. Настроите IS-IS в ISP Триада.
-2. R23 и R25 находятся в зоне 2222.
-3. R24 находится в зоне 24.
-4. R26 находится в зоне 26.
+1. Настроить фильтрацию в офисе Москва так, чтобы не появилось транзитного трафика(As-path).
+2. Настроить фильтрацию в офисе С.-Петербург так, чтобы не появилось транзитного трафика(Prefix-list).
+3. Настроить провайдера Киторн так, чтобы в офис Москва отдавался только маршрут по умолчанию.
+4. Настроить провайдера Ламас так, чтобы в офис Москва отдавался только маршрут по умолчанию и префикс офиса С.-Петербург.
 
 ## 2. Топология сети
 
@@ -13,180 +13,114 @@
 
 Рисунок 1. Топология сети
 
-## 3. Настройка IS-IS
+## 3. Настройка офиса в Москве и провайдеров Китрон и Ламас
 
-R23 и R24 в зоне 2222. Между ними будет соседства уровня L1. R23 с R25 будет в соседстве L2, R24 с R26 в соседстве L2 и R25 с R26 тоже в соседстве L2.
+Транзитным будет трафик, в AS-PATH которого где-то в середине есть номер нашей автономной системы, поэтому будем отфильтровывать все, что в середине AS-PATH соедржит 1001.
 
-### Настрйока зоны 2222
-
-NET R23: 49.2222.1921.6820.0001.00
-NET R25: 49.2222.1921.6820.0002.00
-
-R23
+R14:
 
 ```bash
-router isis 1
- net 49.2222.1921.6820.0001.00
- passive-interface e0/0
+router bgp 1001
+ neighbor 192.0.2.1 remote-as 101
+ neighbor 192.0.2.1 route-map FILTER-TRANSIT in
 
-interface loopback 1
- ip address 192.168.200.1 255.255.255.255
+ip as-path access-list 1 deny _1001_
+ip as-path access-list 1 permit .*
 
-interface Ethernet0/0
- ip address 192.0.2.10 255.255.255.252
- ip router isis 1
-
-interface Ethernet0/1
- ip address 172.20.0.1 255.255.255.252
- ip router isis 1
- isis circuit-type level-1
-
-interface Ethernet0/2
- ip address 172.20.0.5 255.255.255.252
- ip router isis 1
- isis circuit-type level-2-only
+route-map FILTER-TRANSIT permit 10
+ match as-path 1
 ```
 
-R25
+R15:
 
 ```bash
-router isis 1
- net 49.2222.1921.6820.0002.00
- passive-interface default
- no passive-interface Ethernet0/0
- no passive-interface Ethernet0/2
+router bgp 1001
+ neighbor 198.51.100.1 remote-as 301
+ neighbor 198.51.100.1 route-map FILTER-TRANSIT in
 
-interface loopback 1
- ip address 192.168.200.2 255.255.255.255
- ip router isis 1
+ip as-path access-list 1 deny _1001_
+ip as-path access-list 1 permit .*
 
-interface Ethernet0/1
- ip address 203.0.113.17 255.255.255.252
- ip router isis 1
-
-interface Ethernet0/0
- ip address 172.20.0.2 255.255.255.252
- ip router isis 1
- isis circuit-type level-1
-
-interface Ethernet0/2
- ip address 172.20.0.13 255.255.255.252
- ip router isis 1
- isis circuit-type level-2-only
-
-interface Ethernet0/3
- ip address 203.0.113.13 255.255.255.252
- ip router isis 1
+route-map FILTER-TRANSIT permit 10
+ match as-path 1
 ```
 
-Результат команды `show isis neighbor` на R23 и R25
-
-![Alt text](./r23-neigh-1.png)
-
-![Alt text](./r25-neigh-1.png)
-
-Соседство уровня L1 в UP
-
-Полученные по протоколу ISIS маршруты на R23
-
-![Alt text](./r23-ip-route.png)
-
-И R25
-
-![Alt text](./r25-ip-route.png)
-
-### Настрйока зоны 24
-
-NET R24: 49.0024.1921.6820.0003.00
-
-R24
+Китрон - R22:
 
 ```bash
-router isis 1
- net 49.0024.1921.6820.0003.00
- passive-interface default
- no passive-interface Ethernet0/0
- no passive-interface Ethernet0/1
- no passive-interface Ethernet0/2
- no passive-interface Ethernet0/3
- no passive-interface Loopback1
+router bgp 101
+ network 0.0.0.0
+ neighbor 192.0.2.2 remote-as 1001
+ neighbor 192.0.2.2 route-map DEFAULT-ROUTE-TO-R14 out
 
-interface loopback 1
- ip address 192.168.200.3 255.255.255.255
- ip router isis 1
+ip route 0.0.0.0 0.0.0.0 Null0
 
-interface Ethernet0/0
- ip address 198.51.100.6 255.255.255.252
- ip router isis 1
+ip prefix-list DEFAULT-ROUTE-TO-R14 seq 5 permit 0.0.0.0/0
 
-interface Ethernet0/1
- ip address 172.20.0.9 255.255.255.252
- ip router isis 1
- isis circuit-type level-2-only
-
-interface Ethernet0/2
- ip address 172.20.0.6 255.255.255.252
- ip router isis 1
- isis circuit-type level-2-only
-
-interface Ethernet0/3
- ip address 203.0.113.1 255.255.255.252
- ip router isis 1
+route-map DEFAULT-ROUTE-TO-R14 permit 10
+ match ip address prefix-list DEFAULT-ROUTE-TO-R14
 ```
 
-Результат команды `show isis neighbor` на R24
-
-![Alt text](./r24-isis-neigh.png)
-
-Полученные по протоколу ISIS маршруты на R24
-
-![Alt text](./r24-ip-route.png)
-
-### Настрйока зоны 26
-
-NET R26: 49.0026.1921.6820.0004.00
-
-R26
+Ламас - R21:
 
 ```bash
-router isis 1
- net 49.0026.1921.6820.0004.00
- passive-interface default
- no passive-interface Ethernet0/0
- no passive-interface Ethernet0/2
- no passive-interface Loopback1
+router bgp 301
+ network 0.0.0.0 mask 0.0.0.0
+ network 185.82.208.0 mask 255.255.255.0
+ neighbor 198.51.100.2 remote-as 1001
+ neighbor 198.51.100.2 route-map DEFAULT-ROUTE-TO-R15 out
 
-interface Loopback1
- ip address 192.168.200.4 255.255.255.255
- ip router isis 1
+ip route 0.0.0.0 0.0.0.0 Null0
 
-interface Ethernet0/0
- ip address 172.20.0.10 255.255.255.252
- ip router isis 1
- isis circuit-type level-2-only
+ip prefix-list DEFAULT-ROUTE-TO-R15 seq 5 permit 0.0.0.0/0
+ip prefix-list DEFAULT-ROUTE-TO-R15 seq 10 permit 185.82.208.0/24
 
-interface Ethernet0/1
- ip address 203.0.113.9 255.255.255.252
-
-interface Ethernet0/2
- ip address 172.20.0.14 255.255.255.252
- ip router isis 1
- isis circuit-type level-2-only
-
-interface Ethernet0/3
- ip address 203.0.113.5 255.255.255.252
+route-map DEFAULT-ROUTE-TO-R15 permit 10
+ match ip address prefix-list DEFAULT-ROUTE-TO-R15
 ```
 
-Результат команды `show isis neighbor` на R26
+Настройка провайдера Китрон. Анонсирование маршрута по умолчанию:
 
-![Alt text](./r26-isis-neigh.png)
+![Alt text](./r22-show-ip-bgp-neigh.png)
 
-Полученные по протоколу ISIS маршруты на R26
+Настройка провайдера Китрон. Анонсирование маршрута по умолчанию и префикса Санкт-Петербурга (185.82.208.0/24):
 
-![Alt text](./r26-ip-route.png)
+![Alt text](./r21-show-ip-bgp-neigh.png)
 
-## Тест
+Настройка R14. Фильтрация транзитного трафика настроена, но на анонсы от провайдера это не влияет:
 
-В таблицах маршрутизации роутеров появились маршруты, переданные протоколом ISIS. Для теста с R23 пущен пинг до интерфейса e0/1 R26. Пинг прошел успешно, связанность в сети "Триада" имеется.
+![Alt text](./r14-show-ip-bgp-route.png)
 
-![Alt text](./r23-ping-r26.png)
+Настройка R15. Фильтрация транзитного трафика настроена, но на анонсы от провайдера это не влияет:
+
+![Alt text](./r15-show-ip-bgp-route.png)
+
+## 4. Проверка связанности сетей
+
+Проверим, проходят ли ICMP запросы из каждой сети в каждую
+
+Пинг из офиса в Москве до Санкт-Петербурга
+
+![Alt text](r14-ping-r18.png)
+
+Пинг из офиса в Москве до Лабытнанги
+
+![Alt text](r14-ping-r27.png)
+
+Пинг из офиса в Москве до Чокурдах
+
+![Alt text](r14-ping-r28.png)
+
+Пинг из Санкт-Петербурга до Лабытнанги
+
+![Alt text](r18-ping-r27.png)
+
+Пинг из Санкт-Петербурга до Чокурдах
+
+![Alt text](r18-ping-r28.png)
+
+Пинг из Лабытнанги до Чокурдах
+
+![Alt text](r27-ping-r28.png)
+
+Все запросы прошли успешно, связанность полная.
