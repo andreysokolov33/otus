@@ -34,6 +34,9 @@ router ospf 1
  network 10.0.0.0 0.255.255.255 area 0
 
 ntp server 10.20.2.10 
+
+ip route 0.0.0.0 0.0.0.0 104.16.0.5
+ip route 0.0.0.0 0.0.0.0 10.20.99.2 100
 ```
 
 NNGW2
@@ -67,6 +70,9 @@ router ospf 1
  network 10.0.0.0 0.255.255.255 area 0
 
 ntp server 10.20.2.10
+
+ip route 0.0.0.0 0.0.0.0 104.16.0.9
+ip route 0.0.0.0 0.0.0.0 10.20.99.1 100
 ```
 
 NN-DHCP-NAT

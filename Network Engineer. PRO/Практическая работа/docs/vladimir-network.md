@@ -41,6 +41,9 @@ interface Ethernet0/2.1000
 
 router ospf 1
  network 10.0.0.0 0.255.255.255 area 0
+
+ip route 0.0.0.0 0.0.0.0 198.51.96.9
+ip route 0.0.0.0 0.0.0.0 10.16.255.2 100 
 ```
 
 VladimirGW_2
@@ -75,6 +78,9 @@ interface Ethernet0/2.1000
 
 router ospf 1
  network 10.0.0.0 0.255.255.255 area 0
+
+ip route 0.0.0.0 0.0.0.0 198.51.96.5
+ip route 0.0.0.0 0.0.0.0 10.16.255.1 100
 ```
 
 V-DHCP-NTP

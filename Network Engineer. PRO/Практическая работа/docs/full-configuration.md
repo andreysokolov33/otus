@@ -1959,3 +1959,555 @@ line vty 0 4
  transport input ssh
 end
 ```
+
+R26:
+
+```bash
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+hostname R27
+boot-start-marker
+boot-end-marker
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+
+
+no ip domain lookup
+ip domain name triada.ru
+ip cef
+no ipv6 cef
+multilink bundle-name authenticated
+redundancy
+ip ssh time-out 60
+ip ssh version 2
+interface Loopback1
+ ip address 172.20.255.3 255.255.255.255
+ ip ospf 1 area 0
+interface Ethernet0/0
+ ip address 172.20.0.2 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/1
+ ip address 172.20.0.21 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/2
+ ip address 172.20.0.25 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/3
+ ip address 192.71.0.1 255.255.255.252
+router ospf 1
+router bgp 520
+ bgp log-neighbor-changes
+ redistribute connected
+ redistribute static
+ neighbor 520 peer-group
+ neighbor 520 remote-as 520
+ neighbor 520 update-source Loopback1
+ neighbor 520 route-reflector-client
+ neighbor 520 next-hop-self
+ neighbor 172.20.255.5 peer-group 520
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+control-plane
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 15 0
+ login local
+ transport input ssh
+end
+```
+
+R28:
+
+```bash
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+hostname R28
+boot-start-marker
+boot-end-marker
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+
+
+no ip domain lookup
+ip domain name triada.ru
+ip cef
+no ipv6 cef
+multilink bundle-name authenticated
+redundancy
+ip ssh time-out 60
+ip ssh version 2
+interface Loopback1
+ ip address 172.20.255.4 255.255.255.255
+ ip ospf 1 area 0
+interface Ethernet0/0
+ ip address 172.20.0.14 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/1
+ ip address 172.20.0.29 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/2
+ no ip address
+interface Ethernet0/3
+ no ip address
+router ospf 1
+router bgp 520
+ bgp log-neighbor-changes
+ redistribute static
+ neighbor 172.20.255.2 remote-as 520
+ neighbor 172.20.255.2 update-source Loopback1
+ neighbor 172.20.255.2 next-hop-self
+ neighbor 172.20.255.5 remote-as 520
+ neighbor 172.20.255.5 update-source Loopback1
+ neighbor 172.20.255.5 next-hop-self
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+control-plane
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 15 0
+ login local
+ transport input ssh
+end
+```
+
+Triada_RR_1:
+
+```bash
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+hostname Triada_RR_1
+boot-start-marker
+boot-end-marker
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+
+
+no ip domain lookup
+ip domain name triada.ru
+ip cef
+no ipv6 cef
+multilink bundle-name authenticated
+redundancy
+ip ssh time-out 60
+ip ssh version 2
+interface Loopback1
+ ip address 172.20.255.6 255.255.255.255
+ ip ospf 1 area 0
+interface Ethernet0/0
+ ip address 172.20.0.18 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/1
+ ip address 172.20.0.22 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/2
+ ip address 172.20.0.33 255.255.255.252
+interface Ethernet0/3
+ no ip address
+router ospf 1
+router bgp 520
+ bgp log-neighbor-changes
+ neighbor 520 peer-group
+ neighbor 520 remote-as 520
+ neighbor 520 update-source Loopback1
+ neighbor 520 route-reflector-client
+ neighbor 520 next-hop-self
+ neighbor 172.20.255.1 peer-group 520
+ neighbor 172.20.255.2 peer-group 520
+ neighbor 172.20.255.5 remote-as 520
+ neighbor 172.20.255.5 update-source Loopback1
+ neighbor 172.20.255.5 next-hop-self
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+control-plane
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 15 0
+ login local
+ transport input ssh
+end
+```
+
+Triada_RR_2:
+
+```bash
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+hostname Triada_RR_2
+boot-start-marker
+boot-end-marker
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+
+
+no ip domain lookup
+ip domain name triada.ru
+ip cef
+no ipv6 cef
+multilink bundle-name authenticated
+redundancy
+ip ssh time-out 60
+ip ssh version 2
+interface Loopback1
+ ip address 172.20.255.5 255.255.255.255
+ ip ospf 1 area 0
+interface Ethernet0/0
+ ip address 192.71.0.5 255.255.255.252
+interface Ethernet0/1
+ ip address 172.20.0.30 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/2
+ ip address 172.20.0.26 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/3
+ ip address 172.20.0.34 255.255.255.252
+router ospf 1
+router bgp 520
+ bgp log-neighbor-changes
+ network 192.71.0.4 mask 255.255.255.252
+ redistribute connected
+ redistribute static
+ neighbor 520 peer-group
+ neighbor 520 remote-as 520
+ neighbor 520 update-source Loopback1
+ neighbor 520 route-reflector-client
+ neighbor 520 next-hop-self
+ neighbor 172.20.255.3 peer-group 520
+ neighbor 172.20.255.4 peer-group 520
+ neighbor 172.20.255.6 remote-as 520
+ neighbor 172.20.255.6 update-source Loopback1
+ neighbor 172.20.255.6 next-hop-self
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+control-plane
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 15 0
+ login local
+ transport input ssh
+end
+```
+
+R27:
+
+```bash
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+hostname R27
+boot-start-marker
+boot-end-marker
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+
+
+no ip domain lookup
+ip domain name triada.ru
+ip cef
+no ipv6 cef
+multilink bundle-name authenticated
+redundancy
+ip ssh time-out 60
+ip ssh version 2
+interface Loopback1
+ ip address 172.20.255.3 255.255.255.255
+ ip ospf 1 area 0
+interface Ethernet0/0
+ ip address 172.20.0.2 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/1
+ ip address 172.20.0.21 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/2
+ ip address 172.20.0.25 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/3
+ ip address 192.71.0.1 255.255.255.252
+router ospf 1
+router bgp 520
+ bgp log-neighbor-changes
+ redistribute connected
+ redistribute static
+ neighbor 520 peer-group
+ neighbor 520 remote-as 520
+ neighbor 520 update-source Loopback1
+ neighbor 520 route-reflector-client
+ neighbor 520 next-hop-self
+ neighbor 172.20.255.5 peer-group 520
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+control-plane
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 15 0
+ login local
+ transport input ssh
+end
+```
+
+R18:
+
+```bash
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+hostname R18
+boot-start-marker
+boot-end-marker
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+
+
+no ip domain lookup
+ip domain name triada.ru
+ip cef
+no ipv6 cef
+multilink bundle-name authenticated
+redundancy
+ip ssh time-out 60
+ip ssh version 2
+interface Loopback1
+ ip address 172.20.255.1 255.255.255.255
+ ip ospf 1 area 0
+interface Ethernet0/0
+ ip address 185.10.20.2 255.255.255.252
+interface Ethernet0/1
+ ip address 172.20.0.1 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/2
+ ip address 172.20.0.5 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+interface Ethernet0/3
+ ip address 185.10.20.10 255.255.255.252
+router ospf 1
+router bgp 520
+ bgp log-neighbor-changes
+ redistribute connected
+ redistribute static
+ neighbor 172.20.255.6 remote-as 520
+ neighbor 172.20.255.6 update-source Loopback1
+ neighbor 172.20.255.6 next-hop-self
+ neighbor 185.10.20.1 remote-as 65000
+ neighbor 185.10.20.1 route-map DEFAULT-ROUTE-TO-AS65000 out
+ neighbor 185.10.20.9 remote-as 65000
+ neighbor 185.10.20.9 route-map DEFAULT-ROUTE-TO-AS65000 out
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+ip route 192.71.0.0 255.255.240.0 Null0
+ip prefix-list DEFAULT-ROUTE-TO-AS65000 seq 5 permit 0.0.0.0/0
+route-map DEFAULT-ROUTE-TO-AS65000 permit 10
+ match ip address prefix-list DEFAULT-ROUTE-TO-AS65000
+control-plane
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 15 0
+ login local
+ transport input ssh
+end
+```
+
+R36:
+
+```bash
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+hostname R36
+boot-start-marker
+boot-end-marker
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+
+
+no ip domain lookup
+ip domain name lamas.ru
+ip cef
+no ipv6 cef
+multilink bundle-name authenticated
+redundancy
+ip ssh time-out 60
+ip ssh version 2
+interface Loopback1
+ ip address 172.20.255.1 255.255.255.255
+interface Ethernet0/0
+ ip address 192.71.0.6 255.255.255.252
+interface Ethernet0/1
+ ip address 198.51.96.1 255.255.255.252
+interface Ethernet0/2
+ ip address 198.51.96.5 255.255.255.252
+interface Ethernet0/3
+ ip address 198.51.96.9 255.255.255.252
+interface Ethernet1/0
+ no ip address
+ shutdown
+interface Ethernet1/1
+ no ip address
+ shutdown
+interface Ethernet1/2
+ no ip address
+ shutdown
+interface Ethernet1/3
+ no ip address
+ shutdown
+router bgp 301
+ bgp log-neighbor-changes
+ network 198.51.96.0 mask 255.255.248.0
+ neighbor 192.71.0.5 remote-as 520
+ neighbor 192.71.0.5 route-map FILTER-TELNET in
+ neighbor 198.51.96.2 remote-as 8359
+ neighbor 198.51.96.2 soft-reconfiguration inbound
+ neighbor 198.51.96.2 route-map FILTER-TELNET in
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+ip route 198.51.96.0 255.255.248.0 Null0
+ip prefix-list BLOCK-TELNET seq 5 deny 40.0.0.0/8 le 32
+ip prefix-list BLOCK-TELNET seq 10 permit 0.0.0.0/0 le 32
+ip prefix-list ONLY-DEFAULT seq 5 permit 0.0.0.0/0
+route-map FILTER-TELNET deny 10
+ match ip address prefix-list BLOCK-TELNET
+route-map FILTER-TELNET permit 20
+route-map FILTER-ONLY-DEFAULT deny 10
+ match ip address prefix-list ONLY-DEFAULT
+route-map FILTER-ONLY-DEFAULT permit 20
+control-plane
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 15 0
+ login local
+ transport input ssh
+end
+```
+
+MTS:
+
+```bash
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+hostname MTS
+boot-start-marker
+boot-end-marker
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+
+
+no ip domain lookup
+ip domain name mts.ru
+ip cef
+no ipv6 cef
+multilink bundle-name authenticated
+redundancy
+ip ssh time-out 60
+ip ssh version 2
+interface Loopback1
+ ip address 172.20.255.1 255.255.255.255
+interface Ethernet0/0
+ ip address 203.0.112.2 255.255.255.252
+interface Ethernet0/1
+ ip address 104.16.0.5 255.255.255.252
+interface Ethernet0/2
+ ip address 104.16.0.9 255.255.255.252
+interface Ethernet0/3
+ ip address 198.51.96.2 255.255.255.252
+interface Ethernet1/0
+ ip address 104.16.0.1 255.255.255.252
+interface Ethernet1/1
+ no ip address
+ shutdown
+interface Ethernet1/2
+ no ip address
+ shutdown
+interface Ethernet1/3
+ no ip address
+ shutdown
+router bgp 8359
+ bgp router-id 172.20.255.254
+ bgp log-neighbor-changes
+ network 104.16.0.0 mask 255.255.240.0
+ neighbor 104.16.0.2 remote-as 4334
+ neighbor 198.51.96.1 remote-as 301
+ neighbor 203.0.112.1 remote-as 101
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+ip route 104.16.0.0 255.255.240.0 Null0
+control-plane
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ exec-timeout 15 0
+ login local
+ transport input ssh
+end
+```
