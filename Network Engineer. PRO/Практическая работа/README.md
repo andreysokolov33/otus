@@ -12,5 +12,5 @@
 8. [Настройка AS 8359](./docs/as-8359.md)
 9. [Настройка AS 888](./docs/as-888.md)
 10. [Настройка сети в офисе Владимира](./docs/vladimir-network.md)
-11. [Настройка сети в офисе Нижнего-Новгорода](./docs/nizhni-novgorod-network.md)
+11. [Настройка сети в офисе Нижнего Новгорода](./docs/nizhni-novgorod-network.md)
 
