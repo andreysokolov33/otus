@@ -102,7 +102,7 @@ ip route 10.4.0.0 255.255.0.0 172.20.0.1
 
 ## Настроить DMVMN поверх IPSec между Москва и Чокурдах, Лабытнанги
 
-К14:
+R14:
 
 ```bash
 crypto ikev2 proposal IKEv2-DMVPN

@@ -1,11 +1,9 @@
 # Састройка сети в филиале Владимира
 
-В филиале Владимира будет настроен
-
-1. DHCPv4
+1. DHCPv4 и NTP
 2. VRRP
-3. NTP
-4. DmVPN + IPSec
+3. DmVPN + IPSec
+4. Статическая маршрутизация 0.0.0.0/0 на провайдера
 
 ## Настройка маршрутизаторов
 
@@ -27,6 +25,7 @@ interface Ethernet0/2.10
  ip helper-address 10.16.2.10
  standby 10 ip 10.16.1.1
  standby 10 preempt
+ ip nat inside
 
 interface Ethernet0/2.20
  encapsulation dot1Q 20
@@ -35,6 +34,7 @@ interface Ethernet0/2.20
  standby 20 ip 10.16.2.1
  standby 20 priority 150
  standby 20 preempt
+ ip nat inside
 
 interface Ethernet0/2.1000
  encapsulation dot1Q 1000 native
@@ -44,6 +44,54 @@ router ospf 1
 
 ip route 0.0.0.0 0.0.0.0 198.51.96.9
 ip route 0.0.0.0 0.0.0.0 10.16.255.2 100 
+
+ip nat inside source list NAT-LOCAL interface Ethernet0/1 overload
+ip access-list standard NAT-LOCAL
+ permit 10.16.0.0 0.3.255.255
+
+
+crypto ikev2 proposal IKEv2-DMVPN
+ encryption aes-cbc-256
+ integrity sha256
+ group 21
+
+crypto ikev2 policy IKEv2-POLICY
+ proposal IKEv2-DMVPN
+
+crypto ikev2 keyring IKEv2-PSK
+ peer HUB
+  address 185.10.20.255
+  pre-shared-key OTUS
+
+crypto ikev2 profile IKEv2-PROFILE
+ match identity remote address 185.10.20.255 255.255.255.255
+ authentication remote pre-share
+ authentication local pre-share
+ keyring local IKEv2-PSK
+
+crypto ipsec transform-set IPSEC-TRANSFORM esp-aes 256 esp-sha256-hmac
+ mode transport
+
+crypto ipsec profile DMVPN-PROFILE
+ set transform-set IPSEC-TRANSFORM
+ set ikev2-profile IKEv2-PROFILE
+
+interface Tunnel100
+ ip address 10.1.0.2 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication OTUS
+ ip nhrp map multicast 185.10.20.255
+ ip nhrp map 10.1.0.1 185.10.20.255
+ ip nhrp network-id 100
+ ip nhrp nhs 10.1.0.1
+ ip tcp adjust-mss 1360
+ tunnel source Ethernet0/1
+ tunnel mode gre multipoint
+ tunnel protection ipsec profile DMVPN-PROFILE
+
+ip route 10.0.0.0 255.240.0.0 10.1.0.1
+ip route 10.20.0.0 255.252.0.0 10.1.0.3
 ```
 
 VladimirGW_2
@@ -65,6 +113,7 @@ interface Ethernet0/2.10
  standby 10 ip 10.16.1.1
  standby 10 priority 150
  standby 10 preempt
+ ip nat inside
 
 interface Ethernet0/2.20
  encapsulation dot1Q 20
@@ -72,6 +121,7 @@ interface Ethernet0/2.20
  ip helper-address 10.16.2.10
  standby 20 ip 10.16.2.1
  standby 20 preempt
+ ip nat inside
 
 interface Ethernet0/2.1000
  encapsulation dot1Q 1000 native
@@ -81,6 +131,10 @@ router ospf 1
 
 ip route 0.0.0.0 0.0.0.0 198.51.96.5
 ip route 0.0.0.0 0.0.0.0 10.16.255.1 100
+
+ip nat inside source list NAT-LOCAL interface Ethernet0/0 overload
+ip access-list standard NAT-LOCAL
+ permit 10.16.0.0 0.3.255.255
 ```
 
 V-DHCP-NTP
@@ -188,3 +242,25 @@ interface Port-channel1
 В сети действует DHCPv4. Пример получения IP на клиенте VPC46
 
 ![Alt text](./images/vpc46-dhcp.png)
+
+Состояние таблицы с NAT трансляцией на VladimirGW1 после попытки VPC46 выйти за пределы сети:
+
+![Alt text](./images/vladimir-gw1-show-ip-nat-translations.png)
+
+Пинг с VPC46 до NNGW1 проходит успешно:
+
+![Alt text](./images/vpc46-ping-nngw1.png)
+
+VPN туннель до Москвы установлен успешно
+
+![Alt text](./images/vladimirgw1-show-crypto-ike-sa.png)
+
+![Alt text](./images/vladimirgw1-show-ip-nhrp.png)
+
+Пинг до локальной сети филиала в Нижнем-Новгороде проходит
+
+![Alt text](./images/vladimirgw1-ping-nngw1.png)
+
+Далее: [Настройка сети в офисе Нижнего-Новгорода](./nizhni-novgorod-network.md)
+
+Назад: [Оглавление](../README.md)
